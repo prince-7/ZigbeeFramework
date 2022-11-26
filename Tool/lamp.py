@@ -5,12 +5,14 @@ class Lamp():
         self.lamp = Tk()
         self.lamp.title("Secure Lamp")
         self.lamp['bg'] = '#000000'
-        self.lamp.mainloop()
 
     def command(self, data):
         if data == 'ffff':
-            print('ON')
             self.lamp['bg'] = '#ffffff'
+            print('ON')
         elif data == 'aaaa':
-            print('OFF')
             self.lamp['bg'] = '#000000'
+            print('OFF')
+        else:
+            print('No Signal')
+        self.lamp.update()
