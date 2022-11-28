@@ -7,15 +7,7 @@ import datetime
 from lamp import Lamp
 from notification import WhatsApp
 
-with open("config.json",'r') as j:
-        creds = json.loads(j.read())
-
-Whatsapp_Notification = WhatsApp(
-    creds['whatsapp']['whatsapp_sid'],
-    creds['whatsapp']['whatsapp_token'],
-    creds['whatsapp']['whatsapp_from'],
-    creds['whatsapp']['whatsapp_to']
-    )
+Whatsapp_Notification = WhatsApp()
 
 conf.dot15d4_protocol = 'zigbee'
 
