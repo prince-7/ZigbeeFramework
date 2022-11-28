@@ -13,6 +13,13 @@ devstring = input("Enter device id: ")
 kb = KillerBee(device=devstring)
 kb.set_channel(11)
 
+
+try:
+    os.remove('hacker.pcap')
+except OSError:
+    pass
+
+
 while 1:
     cmd = input("Enter Command: ")
 
