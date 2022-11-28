@@ -19,6 +19,10 @@ try:
 except OSError:
     pass
 
+try:
+    os.remove('user.pcap')
+except OSError:
+    pass
 
 while 1:
     cmd = input("Enter Command: ")
@@ -37,12 +41,6 @@ while 1:
     #Send Packet
     cap = PcapReader('user.pcap')
     packet = cap.pnext()[1]
-    os.remove('user.pcap')
 
     time.sleep(1)
     kb.inject(packet[0:-2])
-
-try:
-    os.remove('user.pcap')
-except OSError:
-    pass

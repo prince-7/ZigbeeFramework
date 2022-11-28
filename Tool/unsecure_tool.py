@@ -7,7 +7,6 @@ conf.dot15d4_protocol = 'zigbee'
 from lamp import Lamp
 
 class Unsecure:
-
     def __init__(self):
         self.pckts = []
         self.Lamp = Lamp()

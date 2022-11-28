@@ -46,9 +46,7 @@ class Secure:
                     framecounter_cache[source] = framecounter
                 else:
                     if(framecounter_cache[source] >= framecounter):
-                        message = f"Attention! Replay Attack was detected on your virtual lamp on \
-                                    {str(datetime.datetime.now()).strip()[0]} at \
-                                    {str(datetime.datetime.now()).strip()[1]}"
+                        message = "Attention! Replay Attack was detected on your virtual lamp on " + str(datetime.datetime.now())
                         print(message)
                         Whatsapp_Notification.send_message(message)
                         continue
