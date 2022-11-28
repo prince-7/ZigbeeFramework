@@ -41,3 +41,8 @@ while 1:
 
     time.sleep(1)
     kb.inject(packet[0:-2])
+
+try:
+    os.remove('user.pcap')
+except OSError:
+    pass
