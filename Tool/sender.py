@@ -32,5 +32,5 @@ while 1:
     packet = cap.pnext()[1]
     os.remove('user.pcap')
 
-    time.sleep(0.1)
+    time.sleep(1)
     kb.inject(packet[0:-2])
