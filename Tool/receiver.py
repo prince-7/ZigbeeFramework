@@ -1,3 +1,10 @@
+#!/usr/bin/env python3
+
+'''
+zbdump - a tcpdump-like tool for ZigBee/IEEE 802.15.4 networks
+Compatible with Wireshark 1.1.2 and later (jwright@willhackforsushi.com)
+The -p flag adds CACE PPI headers to the PCAP (ryan@rmspeers.com)
+'''
 from typing import Optional, Any, List, Dict, Union
 
 import sys
@@ -28,7 +35,7 @@ def interrupt(signum, frame) -> None:
         daintree_dumper.close()
 
 def dump_packets(args):
-    global packetcount
+    global packetcount;
     global kb
     global pcap_dumper
     global daintree_dumper 
@@ -81,7 +88,7 @@ def main():
     # Command-line arguments
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('-i', '--iface', '--dev', action='store', dest='devstring',
-                        help='(Required) Stirng: Path to the interface of the device being used.')
+                        help='(Required) String: Path to the interface of the device being used.')
     parser.add_argument('-d', '--device', action='store',
                         help='(Required) String: Name of the hardare device being used. E.g. apimote')
     parser.add_argument('-w', '--pcapfile', action='store',
@@ -115,9 +122,9 @@ def main():
         sys.exit(1)
 
     elif args.pcapfile is not None:
-        pcapDumper = PcapDumper(DLT_IEEE802_15_4, args.pcapfile, ppi=args.ppi)
+        pcap_dumper = PcapDumper(DLT_IEEE802_15_4, args.pcapfile, ppi=args.ppi)
     elif args.dsnafile is not None:
-        daintreeDumper = DainTreeDumper(args.dsnafile)
+        daintree_dumper = DainTreeDumper(args.dsnafile)
 
     if args.devstring is None:
         print("Autodetection features will be deprecated - please include interface string (e.g. -i /dev/ttyUSB0)")

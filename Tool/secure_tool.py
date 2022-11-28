@@ -1,12 +1,26 @@
 from scapy.all import *
 from scapy.layers.zigbee import *
 from scapy.layers.dot15d4 import *
+import json
+import datetime
  
+from lamp import Lamp
+from notification import WhatsApp
+
+with open("config.json",'r') as j:
+        creds = json.loads(j.read())
+
+Whatsapp_Notification = WhatsApp(
+    creds['whatsapp']['whatsapp_sid'],
+    creds['whatsapp']['whatsapp_token'],
+    creds['whatsapp']['whatsapp_from'],
+    creds['whatsapp']['whatsapp_to']
+    )
+
 conf.dot15d4_protocol = 'zigbee'
 
 framecounter_cache = {}
 
-from lamp import Lamp
 
 class Secure:
 
@@ -16,7 +30,7 @@ class Secure:
         
     def start(self):
         while 1:
-            pcap_reader = PcapReader('test.pcap')
+            pcap_reader = PcapReader('user.pcap')
             pckts_c = pcap_reader.read_all(count=-1)
             pcap_reader.close()
             if(len(pckts_c) == len(self.pckts)):
@@ -32,7 +46,11 @@ class Secure:
                     framecounter_cache[source] = framecounter
                 else:
                     if(framecounter_cache[source] >= framecounter):
-                        print("BEWARE !!! Replay Attack")
+                        message = f"Attention! Replay Attack was detected on your virtual lamp on \
+                                    {str(datetime.datetime.now()).strip()[0]} at \
+                                    {str(datetime.datetime.now()).strip()[1]}"
+                        print(message)
+                        Whatsapp_Notification.send_message(message)
                         continue
                     else:
                         framecounter_cache[source] = framecounter
