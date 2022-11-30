@@ -56,16 +56,11 @@ def display_details(routerdata):
 def response_handler(stumbled, packet, channel):
     global args
     d154 = Dot154PacketParser()
-    # Chop the packet up
     pktdecode = d154.pktchop(packet)
 
-    # Byte-swap the frame control field
     fcf = struct.unpack("<H", pktdecode[0])[0]
 
-    # Check if this is a beacon frame
     if (fcf & DOT154_FCF_TYPE_MASK) == DOT154_FCF_TYPE_BEACON:
-        # The 6th element offset in the Dot154PacketParser.pktchop() method
-        # contains the beacon data in its own list.  Extract the Ext PAN ID.
         spanid = pktdecode[4][::-1]
         source = pktdecode[5][::-1]
         beacondata = pktdecode[6]
@@ -107,7 +102,6 @@ def interrupt(signum, frame):
     sys.exit(0)
 
 if __name__ == '__main__':
-    # Command-line arguments
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('-i', '--iface', '--dev', action='store', dest='devstring')
     parser.add_argument('-g', '--gps', '--ignore', action='append', dest='ignore')
@@ -129,9 +123,7 @@ if __name__ == '__main__':
             print(("Issue opening CSV output file: {0}.".format(e)))
         csvfile.write("panid,source,extpanid,stackprofile,stackversion,channel\n")
 
-    # Beacon frame
     beacon = b"\x03\x08\x00\xff\xff\xff\xff\x07"
-    # Immutable strings - split beacon around sequence number field
     beaconp1 = beacon[0:2]
     beaconp2 = beacon[3:]
 
@@ -144,7 +136,6 @@ if __name__ == '__main__':
     signal.signal(signal.SIGINT, interrupt)
     print(("Transmitting and receiving on interface \'{0}\'".format(kb.get_dev_info()[0])))
 
-    # Sequence number of beacon request frame
     seqnum = 0
     if args.channel:
         channel = args.channel
@@ -152,7 +143,6 @@ if __name__ == '__main__':
     else:
         channel = 11
 
-    # Loop injecting and receiving packets
     while 1:
         if channel > 26:
             channel = 11
@@ -174,7 +164,6 @@ if __name__ == '__main__':
 
         beaconinj = b''.join([beaconp1, b"%c" % seqnum, beaconp2])
 
-        # response frame.
         try:
             txcount+=1
             kb.inject(beaconinj)
@@ -183,7 +172,6 @@ if __name__ == '__main__':
             sys.exit(-1)
 
         recvpkt = kb.pnext(args.delay)
-        # Check for empty packet (timeout) and valid FCS
         if recvpkt is not None and recvpkt[1]:
             rxcount += 1
             if args.verbose:
